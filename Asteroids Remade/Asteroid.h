@@ -7,26 +7,28 @@
 
 class Asteroid : public BaseObj
 {
-public:
-	Asteroid();
-	~Asteroid();
+	public:
+		Asteroid();
+		~Asteroid();
 
-	virtual void Start();
-	virtual bool Update();
-	virtual void Render();
+		virtual void Start();
+		virtual bool Update();
+		virtual void Render();
 
-	void Spawn(Vec2 _pos);
-	bool IsLive() { return m_isLive; };
-	bool DealDamage(int _dmg);
-	bool CheckCollision(Vec2 _pos, float _radius);
+		void Spawn(Vec2 _pos);
+		bool IsLive() { return m_isLive; };
+		bool DealDamage(int _dmg);
+		bool CheckCollision(Vec2 _pos, float _radius);
+		void LimitCheck();
 
-	protected:
-		int m_health, m_maxHealth;
+		protected:
+			int m_health, m_maxHealth;
 		
-		float m_vel, m_radius;
-		bool m_isLive;
+			float m_vel, m_radius, m_size, m_frameNo, m_frameCount;
+			bool m_isLive;
 
-	private:
+		private:
+			
 };
 
 #endif

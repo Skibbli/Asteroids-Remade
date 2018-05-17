@@ -5,7 +5,7 @@
 
 #include "Gamestate.h"
 #include "Player.h"
-#include "Asteroid.h"
+#include "AsteroidSpawner.h"
 
 
 class Level : public Gamestate
@@ -27,12 +27,13 @@ class Level : public Gamestate
 		Player m_player;
 		
 		Bullet *m_bullets;
+
+		AsteroidSpawner m_spawner;
 		
 		weak<ALLEGRO_FONT> m_font;
 
 		void FireBullet();
-		bool GetInput();
-		
+		bool GetInput();	
 };
 
 #endif

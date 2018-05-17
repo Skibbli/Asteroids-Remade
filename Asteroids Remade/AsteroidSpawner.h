@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include "Asteroid.h"
+#include "Bullet.h"
 
 
 class AsteroidSpawner
@@ -13,7 +14,8 @@ class AsteroidSpawner
 		void Update();
 		void Render();
 
-		void SpawnAsteroids(int _num, int _size);
+		void SpawnAsteroids(int _num, int _size, Vec2 _pos, bool _random);
+		void CheckForCollisions(Bullet _bullets[], int _numBullets);
 
 	private:
 		int m_maxBigAst, m_maxMedAst, m_maxSmallAst;

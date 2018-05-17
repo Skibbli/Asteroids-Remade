@@ -19,14 +19,14 @@ bool BaseObj::Update()
 
 void BaseObj::LimitCheck(float _width, float _height)
 {
-	if (m_pos.y < -50)
-		m_pos.y = _height + 50;
-	if (m_pos.y > _height + 50)
-		m_pos.y = -50;
-	if (m_pos.x > _width + 50)
-		m_pos.x = -50;
-	if (m_pos.x < -50)
-		m_pos.x = _width + 50;
+	if (m_pos.y < 0 - m_frameWidth / 2)
+		m_pos.y = _height + m_frameWidth / 2;
+	if (m_pos.y > _height + m_frameWidth / 2)
+		m_pos.y = 0 - m_frameWidth / 2;
+	if (m_pos.x > _width + m_frameWidth / 2)
+		m_pos.x = 0 - m_frameWidth / 2;
+	if (m_pos.x < 0 - m_frameWidth / 2)
+		m_pos.x = _width + m_frameWidth / 2;
 
 	if (m_direction > ALLEGRO_PI * 2)
 		m_direction = 0;

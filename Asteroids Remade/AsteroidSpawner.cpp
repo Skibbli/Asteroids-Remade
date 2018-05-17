@@ -15,13 +15,13 @@ AsteroidSpawner::AsteroidSpawner()
 	ALLEGRO_MONITOR_INFO info;
 	al_get_monitor_info(0, &info);
 
-	m_displayWidth = info.x2;
-	m_displayHeight = info.y2;
+	m_displayWidth = 1000;
+	m_displayHeight = 1000;
 }
 
 void AsteroidSpawner::Start()
 {
-	SpawnAsteroids(5, 0);
+	SpawnAsteroids(4, 0, Vec2(0,0), true);
 }
 
 void AsteroidSpawner::Update()
@@ -31,7 +31,7 @@ void AsteroidSpawner::Update()
 		if (m_bigAsteroids[x].IsLive())
 		{
 			m_bigAsteroids[x].Update();
-			m_bigAsteroids[x].LimitCheck(m_displayWidth, m_displayHeight);
+			m_bigAsteroids[x].LimitCheck();
 		}
 	}
 
@@ -40,7 +40,7 @@ void AsteroidSpawner::Update()
 		if (m_medAsteroids[x].IsLive())
 		{
 			m_medAsteroids[x].Update();
-			m_medAsteroids[x].LimitCheck(m_displayWidth, m_displayHeight);
+			m_medAsteroids[x].LimitCheck();
 		}
 	}
 
@@ -49,7 +49,7 @@ void AsteroidSpawner::Update()
 		if (m_smallAsteroids[x].IsLive())
 		{
 			m_smallAsteroids[x].Update();
-			m_smallAsteroids[x].LimitCheck(m_displayWidth, m_displayHeight);
+			m_smallAsteroids[x].LimitCheck();
 		}
 	}
 }
@@ -81,7 +81,7 @@ void AsteroidSpawner::Render()
 	}
 }
 
-void AsteroidSpawner::SpawnAsteroids(int _num, int _size)
+void AsteroidSpawner::SpawnAsteroids(int _num, int _size, Vec2 _pos, bool _random)
 {
 	int y = 0;
 
@@ -91,29 +91,31 @@ void AsteroidSpawner::SpawnAsteroids(int _num, int _size)
 
 	int z = distr(eng);
 
+
 	if (_size == 0)
 	{
 		for (int x = 0; x < m_maxBigAst && y < _num; x++)
 		{
 			if (!m_bigAsteroids[x].IsLive())
 			{
-				float xCo, yCo;
-
-				if (z == 1)
+				if (_random)
 				{
-					std::uniform_int_distribution<> distr(0, 1000);
-					xCo = distr(eng);
-					yCo = 1100;
+					if (z == 1)
+					{
+						std::uniform_int_distribution<> distr(0, 1000);
+						_pos.x = distr(eng);
+						_pos.y = 1100;
+					}
+
+					if (z == 2)
+					{
+						std::uniform_int_distribution<> distr(0, 1000);
+						_pos.x = 1100;
+						_pos.y = distr(eng);
+					}
 				}
 
-				if (z == 2)
-				{
-					std::uniform_int_distribution<> distr(0, 1000);
-					xCo = 1100;
-					yCo = distr(eng);
-				}
-
-				m_bigAsteroids[x].Spawn(Vec2(xCo, yCo));
+				m_bigAsteroids[x].Spawn(_pos);
 				y++;
 			}
 		}
@@ -125,23 +127,24 @@ void AsteroidSpawner::SpawnAsteroids(int _num, int _size)
 		{
 			if (!m_medAsteroids[x].IsLive())
 			{
-				float xCo, yCo;
-
-				if (z == 1)
+				if (_random)
 				{
-					std::uniform_int_distribution<> distr(0, 1000);
-					xCo = distr(eng);
-					yCo = 1100;
+					if (z == 1)
+					{
+						std::uniform_int_distribution<> distr(0, 1000);
+						_pos.x = distr(eng);
+						_pos.y = 1100;
+					}
+
+					if (z == 2)
+					{
+						std::uniform_int_distribution<> distr(0, 1000);
+						_pos.x = 1100;
+						_pos.y = distr(eng);
+					}
 				}
 
-				if (z == 2)
-				{
-					std::uniform_int_distribution<> distr(0, 1000);
-					xCo = 1100;
-					yCo = distr(eng);
-				}
-
-				m_medAsteroids[x].Spawn(Vec2(xCo, yCo));
+				m_medAsteroids[x].Spawn(_pos);
 				y++;
 			}
 		}
@@ -153,24 +156,80 @@ void AsteroidSpawner::SpawnAsteroids(int _num, int _size)
 		{
 			if (!m_smallAsteroids[x].IsLive())
 			{
-				float xCo, yCo;
-
-				if (z == 1)
+				if (_random)
 				{
-					std::uniform_int_distribution<> distr(0, 1000);
-					xCo = distr(eng);
-					yCo = 1100;
+					if (z == 1)
+					{
+						std::uniform_int_distribution<> distr(0, 1000);
+						_pos.x = distr(eng);
+						_pos.y = 1100;
+					}
+
+					if (z == 2)
+					{
+						std::uniform_int_distribution<> distr(0, 1000);
+						_pos.x = 1100;
+						_pos.y = distr(eng);
+					}
 				}
 
-				if (z == 2)
-				{
-					std::uniform_int_distribution<> distr(0, 1000);
-					xCo = 1100;
-					yCo = distr(eng);
-				}
-
-				m_smallAsteroids[x].Spawn(Vec2(xCo, yCo));
+				m_smallAsteroids[x].Spawn(_pos);
 				y++;
+			}
+		}
+	}
+}
+
+void AsteroidSpawner::CheckForCollisions(Bullet _bullets[], int _numBullets)
+{
+	for (int x = 0; x < _numBullets; x++)
+	{
+		if (_bullets[x].IsLive())
+		{
+			for (int y = 0; y < m_maxBigAst; y++)
+			{
+				if (m_bigAsteroids[y].IsLive())
+				{
+					if (m_bigAsteroids[y].CheckCollision(_bullets[x].GetPos(), 2))
+					{
+						_bullets[x].SetLive(false);
+
+						if (m_bigAsteroids[y].DealDamage(_bullets[x].GetDamage()))
+						{
+							SpawnAsteroids(4, 1, m_bigAsteroids[y].GetPos(), false);
+						}
+					}
+				}
+			}
+
+			for (int y = 0; y < m_maxMedAst; y++)
+			{
+				if (m_medAsteroids[y].IsLive())
+				{
+					if (m_medAsteroids[y].CheckCollision(_bullets[x].GetPos(), 2))
+					{
+						_bullets[x].SetLive(false);
+
+						if (m_medAsteroids[y].DealDamage(_bullets[x].GetDamage()))
+						{
+							SpawnAsteroids(4, 2, m_medAsteroids[y].GetPos(), false);
+						}
+					}
+				}
+			}
+
+			for (int y = 0; y < m_maxSmallAst; y++)
+			{
+				if (m_smallAsteroids[y].IsLive())
+				{
+					if (m_smallAsteroids[y].CheckCollision(_bullets[x].GetPos(), 2))
+					{
+						_bullets[x].SetLive(false);
+
+						m_smallAsteroids[y].DealDamage(_bullets[x].GetDamage());
+
+					}
+				}
 			}
 		}
 	}

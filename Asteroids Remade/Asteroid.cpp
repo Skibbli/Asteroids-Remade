@@ -2,6 +2,8 @@
 
 #include "Asteroid.h"
 #include "Resources.h"
+#include "Time.h"
+
 
 Asteroid::Asteroid()
 {
@@ -10,8 +12,6 @@ Asteroid::Asteroid()
 
 	m_frameWidth = al_get_bitmap_width(m_bitmap.lock().get());
 	m_frameHeight = al_get_bitmap_height(m_bitmap.lock().get());
-
-	m_radius = m_frameWidth / 2;
 }
 
 void Asteroid::Start()
@@ -55,6 +55,27 @@ bool Asteroid::CheckCollision(Vec2 _pos, float _radius)
 		return false;
 }
 
+void Asteroid::LimitCheck()
+{
+	float _width = 1000;
+	float _height = 1000;
+
+	if (m_pos.y < 0 - m_frameWidth * m_size / 2)
+		m_pos.y = _height + m_frameWidth * m_size / 2;
+	if (m_pos.y > _height + m_frameWidth * m_size / 2)
+		m_pos.y = 0 - m_frameWidth * m_size / 2;
+	if (m_pos.x > _width + m_frameWidth * m_size / 2)
+		m_pos.x = 0 - m_frameWidth * m_size / 2;
+	if (m_pos.x < 0 - m_frameWidth * m_size / 2)
+		m_pos.x = _width + m_frameWidth * m_size / 2;
+
+	if (m_direction > ALLEGRO_PI * 2)
+		m_direction = 0;
+
+	if (m_direction < 0)
+		m_direction = ALLEGRO_PI * 2;
+}
+
 bool Asteroid::DealDamage(int _dmg)
 {
 	m_health -= _dmg;
@@ -79,7 +100,13 @@ Asteroid::~Asteroid()
 BigAsteroid::BigAsteroid()
 {
 	m_maxHealth = 100;
-	m_vel = 3;
+	m_vel = 1.55;
+
+	m_size = 1.85;
+	m_radius = (m_frameWidth * m_size) / 2;
+
+	m_frameCount = 500;
+	m_frameNo = 0;
 }
 
 void BigAsteroid::Start()
@@ -89,18 +116,23 @@ void BigAsteroid::Start()
 
 bool BigAsteroid::Update()
 {
-	m_pos.x += m_vel * cos(m_direction);
-	m_pos.y += m_vel * sin(m_direction);
+	m_pos.x += m_vel * cos(m_direction) * Time::GetDeltaTime() * 50;
+	m_pos.y += m_vel * sin(m_direction) * Time::GetDeltaTime() * 50;
 
 	return true;
 }
 
 void BigAsteroid::Render()
 {
-	al_draw_bitmap(m_bitmap.lock().get(), m_pos.x - m_frameWidth / 2, m_pos.y - m_frameHeight / 2, 0);
+	al_draw_scaled_rotated_bitmap(m_bitmap.lock().get(), m_frameWidth / 2, m_frameHeight / 2, m_pos.x, m_pos.y, m_size, m_size, (ALLEGRO_PI * 2) * (m_frameNo / m_frameCount), 0);
 
-	//al_draw_scaled_bitmap(m_bitmap.lock().get(), 0, 0, m_frameWidth, m_frameHeight, m_pos.x - m_frameWidth / 2, m_pos.y - m_frameHeight / 2, m_frameWidth, m_frameHeight, 0);
-	al_draw_circle(m_pos.x, m_pos.y, 2, al_map_rgb(255, 255, 0), 1);
+	m_frameNo++;
+
+	if (m_frameNo > m_frameCount)
+		m_frameNo = 0;
+
+	/*al_draw_scaled_bitmap(m_bitmap.lock().get(), 0, 0, m_frameWidth, m_frameHeight, m_pos.x - ((m_frameWidth * m_size) / 2),
+		m_pos.y - ((m_frameHeight * m_size) / 2), m_frameWidth * m_size, m_frameHeight * m_size, 0);*/
 }
 
 BigAsteroid::~BigAsteroid()
@@ -113,7 +145,13 @@ BigAsteroid::~BigAsteroid()
 MedAsteroid::MedAsteroid()
 {
 	m_maxHealth = 50;
-	m_vel = 6;
+	m_vel = 2.15;
+
+	m_size = 1.325;
+	m_radius = (m_frameWidth * m_size) / 2;
+
+	m_frameCount = 400;
+	m_frameNo = 0;
 }
 
 void MedAsteroid::Start()
@@ -131,10 +169,15 @@ bool MedAsteroid::Update()
 
 void MedAsteroid::Render()
 {
-	//al_draw_bitmap(m_bitmap.lock().get(), m_pos.x - m_frameWidth / 2, m_pos.x - m_frameHeight / 2, 0);
+	al_draw_scaled_rotated_bitmap(m_bitmap.lock().get(), m_frameWidth / 2, m_frameHeight / 2, m_pos.x, m_pos.y, m_size, m_size, (ALLEGRO_PI * 2) * (m_frameNo / m_frameCount), 0);
 
-	al_draw_scaled_bitmap(m_bitmap.lock().get(), 0, 0, m_frameWidth, m_frameHeight, m_pos.x - m_frameWidth / 4, m_pos.y - m_frameHeight / 4, m_frameWidth / 2, m_frameHeight / 2, 0);
-	al_draw_circle(m_pos.x, m_pos.y, 2, al_map_rgb(255, 255, 0), 1);
+	m_frameNo++;
+
+	if (m_frameNo > m_frameCount)
+		m_frameNo = 0;
+
+	/*al_draw_scaled_bitmap(m_bitmap.lock().get(), 0, 0, m_frameWidth, m_frameHeight, m_pos.x - ((m_frameWidth * m_size) / 2),
+		m_pos.y - ((m_frameHeight * m_size) / 2), m_frameWidth * m_size, m_frameHeight * m_size, 0);*/
 }
 
 MedAsteroid::~MedAsteroid()
@@ -147,7 +190,13 @@ MedAsteroid::~MedAsteroid()
 SmallAsteroid::SmallAsteroid()
 {
 	m_maxHealth = 25;
-	m_vel = 10;
+	m_vel = 3.0;
+
+	m_size = 0.85;
+	m_radius = (m_frameWidth * m_size) / 2;
+
+	m_frameCount = 300;
+	m_frameNo = 0;
 }
 
 void SmallAsteroid::Start()
@@ -165,10 +214,15 @@ bool SmallAsteroid::Update()
 
 void SmallAsteroid::Render()
 {
-	//al_draw_bitmap(m_bitmap.lock().get(), m_pos.x - m_frameWidth / 2, m_pos.x - m_frameHeight / 2, 0);
+	al_draw_scaled_rotated_bitmap(m_bitmap.lock().get(), m_frameWidth / 2, m_frameHeight / 2, m_pos.x, m_pos.y, m_size, m_size, (ALLEGRO_PI * 2) * (m_frameNo / m_frameCount), 0);
 
-	al_draw_scaled_bitmap(m_bitmap.lock().get(), 0, 0, m_frameWidth, m_frameHeight, m_pos.x - m_frameWidth / 6, m_pos.y - m_frameHeight / 6, m_frameWidth / 3, m_frameHeight / 3, 0);
-	al_draw_circle(m_pos.x, m_pos.y, 2, al_map_rgb(255, 255, 0), 1);
+	m_frameNo++;
+
+	if (m_frameNo > m_frameCount)
+		m_frameNo = 0;
+
+	/*al_draw_scaled_bitmap(m_bitmap.lock().get(), 0, 0, m_frameWidth, m_frameHeight, m_pos.x - ((m_frameWidth * m_size) / 2),
+		m_pos.y - ((m_frameHeight * m_size) / 2), m_frameWidth * m_size, m_frameHeight * m_size, 0);*/
 }
 
 SmallAsteroid::~SmallAsteroid()

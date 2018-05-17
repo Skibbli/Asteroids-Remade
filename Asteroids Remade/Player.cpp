@@ -40,8 +40,8 @@ void Player::Start(Bullet *_bullets)
 
 bool Player::Update()
 {
-	m_pos.x += m_vel.x;
-	m_pos.y += m_vel.y;
+	m_pos.x += m_vel.x * Time::GetDeltaTime() * 50;
+	m_pos.y += m_vel.y * Time::GetDeltaTime() * 50;
 
 	if (m_totalVelocity > m_maxVelocity)
 	{
