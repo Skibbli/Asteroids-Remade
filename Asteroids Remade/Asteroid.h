@@ -4,6 +4,7 @@
 #include "stdafx.h"
 
 #include "BaseObj.h"
+#include "Collider.h"
 
 class Asteroid : public BaseObj
 {
@@ -12,20 +13,22 @@ class Asteroid : public BaseObj
 		~Asteroid();
 
 		virtual void Start();
-		virtual bool Update();
+		bool Update();
 		virtual void Render();
 
-		void Spawn(Vec2 _pos);
+		virtual void Spawn();
 		bool IsLive() { return m_isLive; };
-		bool DealDamage(int _dmg);
 		bool CheckCollision(Vec2 _pos, float _radius);
 		void LimitCheck();
+		virtual void TakeDmg(int _dmg);
 
 		protected:
-			int m_health, m_maxHealth;
+			int m_health, m_maxHealth, m_rotDir;
 		
-			float m_vel, m_radius, m_size, m_frameNo, m_frameCount;
+			float m_vel, m_radius, m_size, m_frameNo, m_frameCount, m_rotation;
 			bool m_isLive;
+
+			shared<Collider> m_collider;
 
 		private:
 			
@@ -43,6 +46,8 @@ class BigAsteroid : public Asteroid
 		bool Update();
 		void Render();		
 
+		void Spawn(Vec2 _pos);
+
 	private:
 
 };
@@ -57,6 +62,8 @@ class MedAsteroid : public Asteroid
 		bool Update();
 		void Render();
 
+		void Spawn(Vec2 _pos);
+
 	private:
 
 };
@@ -70,6 +77,8 @@ class SmallAsteroid : public Asteroid
 		void Start();
 		bool Update();
 		void Render();
+
+		void Spawn(Vec2 _pos);
 
 	private:
 

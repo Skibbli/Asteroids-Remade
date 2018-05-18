@@ -20,6 +20,7 @@ class Player : public BaseObj
 		bool Fire();
 		void Deccelerate();
 		void GetBulletDets(Bullet &_bullet);
+		void CheckCollisions();
 
 		Vec2 GetPos() { return m_pos; };
 		float GetXVel() { return m_vel.x; };
@@ -42,6 +43,8 @@ class Player : public BaseObj
 		float m_totalVelocity;
 		float m_maxVelocity;
 		float m_acceleration;
+
+		shared<Collider> m_collider;
 
 		Bullet *m_bullets;
 };

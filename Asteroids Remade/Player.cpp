@@ -4,6 +4,7 @@
 #include "Input.h"
 #include "Time.h"
 #include "Resources.h"
+#include "Core.h"
 
 
 Player::Player()
@@ -23,8 +24,8 @@ void Player::Start(Bullet *_bullets)
 	m_score = 0;
 	m_vel.x = m_vel.y = m_totalVelocity = 0.0f;
 	m_direction = 270 * degToRad;
-	m_maxVelocity = 5.0;
-	m_acceleration = 0.25f;
+	m_maxVelocity = 250.0;
+	m_acceleration = 14.0f;
 	m_isFiring = false;
 
 	m_pos.x = 500;
@@ -36,18 +37,23 @@ void Player::Start(Bullet *_bullets)
 	m_frameHeight = al_get_bitmap_height(m_bitmap.lock().get());
 
 	m_boundRadius = m_frameWidth / 2;
+
+	m_collider = std::make_shared<Collider>(OBJECTS::PLAYER, m_pos, m_boundRadius);
+	Core::GetInstance().AddCollider(m_collider);
 }
 
 bool Player::Update()
 {
-	m_pos.x += m_vel.x * Time::GetDeltaTime() * 50;
-	m_pos.y += m_vel.y * Time::GetDeltaTime() * 50;
+	m_pos.x += m_vel.x * Time::GetDeltaTime();
+	m_pos.y += m_vel.y * Time::GetDeltaTime();
 
 	if (m_totalVelocity > m_maxVelocity)
 	{
 		m_vel.x *= m_maxVelocity / m_totalVelocity;
 		m_vel.y *= m_maxVelocity / m_totalVelocity;
 	}
+
+	CheckCollisions();
 
 	if (m_isFiring)
 	{
@@ -56,6 +62,19 @@ bool Player::Update()
 
 	else
 		return false;
+}
+
+void Player::CheckCollisions()
+{
+	std::vector<Collision> collisions = m_collider.get()->GetCollisions();
+
+	for (Collision col : collisions)
+	{
+		if (col.s_objHit.lock().get()->GetObjType() == OBJECTS::ASTEROID)
+		{
+
+		}
+	}
 }
 
 void Player::Input()

@@ -17,8 +17,13 @@ class BaseObj
 		void LimitCheck(float _width, float _height);
 		Vec2 GetPos();
 		void SetPos(Vec2 _pos);
+		void SetIsLive(bool _isLive);
+		bool GetIsLive();
+
+		virtual void TakeDmg(int _dmg);
 
 	protected:
+		bool m_isLive;
 		Vec2 m_pos;
 		float m_direction;
 

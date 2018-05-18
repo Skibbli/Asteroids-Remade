@@ -30,8 +30,16 @@ void AsteroidSpawner::Update()
 	{
 		if (m_bigAsteroids[x].IsLive())
 		{
-			m_bigAsteroids[x].Update();
-			m_bigAsteroids[x].LimitCheck();
+			if (m_bigAsteroids[x].Update())
+			{
+				m_bigAsteroids[x].LimitCheck();
+			}
+
+			else
+			{
+				SpawnAsteroids(4, 1, m_bigAsteroids[x].GetPos(), false);
+				m_bigAsteroids[x].SetIsLive(false);
+			}
 		}
 	}
 
@@ -39,8 +47,16 @@ void AsteroidSpawner::Update()
 	{
 		if (m_medAsteroids[x].IsLive())
 		{
-			m_medAsteroids[x].Update();
-			m_medAsteroids[x].LimitCheck();
+			if (m_medAsteroids[x].Update())
+			{
+				m_medAsteroids[x].LimitCheck();
+			}
+
+			else
+			{
+				SpawnAsteroids(4, 1, m_medAsteroids[x].GetPos(), false);
+				m_medAsteroids[x].SetIsLive(false);
+			}
 		}
 	}
 
@@ -48,8 +64,15 @@ void AsteroidSpawner::Update()
 	{
 		if (m_smallAsteroids[x].IsLive())
 		{
-			m_smallAsteroids[x].Update();
-			m_smallAsteroids[x].LimitCheck();
+			if (m_smallAsteroids[x].Update())
+			{
+				m_smallAsteroids[x].LimitCheck();
+			}
+
+			else
+			{
+				m_smallAsteroids[x].SetIsLive(false);
+			}
 		}
 	}
 }
@@ -182,7 +205,7 @@ void AsteroidSpawner::SpawnAsteroids(int _num, int _size, Vec2 _pos, bool _rando
 
 void AsteroidSpawner::CheckForCollisions(Bullet _bullets[], int _numBullets)
 {
-	for (int x = 0; x < _numBullets; x++)
+	/*for (int x = 0; x < _numBullets; x++)
 	{
 		if (_bullets[x].IsLive())
 		{
@@ -190,7 +213,7 @@ void AsteroidSpawner::CheckForCollisions(Bullet _bullets[], int _numBullets)
 			{
 				if (m_bigAsteroids[y].IsLive())
 				{
-					if (m_bigAsteroids[y].CheckCollision(_bullets[x].GetPos(), 2))
+					if (m_bigAsteroids[y].CheckCollision(_bullets[x].GetPos(), _bullets[x].GetRadius()))
 					{
 						_bullets[x].SetLive(false);
 
@@ -206,7 +229,7 @@ void AsteroidSpawner::CheckForCollisions(Bullet _bullets[], int _numBullets)
 			{
 				if (m_medAsteroids[y].IsLive())
 				{
-					if (m_medAsteroids[y].CheckCollision(_bullets[x].GetPos(), 2))
+					if (m_medAsteroids[y].CheckCollision(_bullets[x].GetPos(), _bullets[x].GetRadius()))
 					{
 						_bullets[x].SetLive(false);
 
@@ -222,7 +245,7 @@ void AsteroidSpawner::CheckForCollisions(Bullet _bullets[], int _numBullets)
 			{
 				if (m_smallAsteroids[y].IsLive())
 				{
-					if (m_smallAsteroids[y].CheckCollision(_bullets[x].GetPos(), 2))
+					if (m_smallAsteroids[y].CheckCollision(_bullets[x].GetPos(), _bullets[x].GetRadius()))
 					{
 						_bullets[x].SetLive(false);
 
@@ -232,7 +255,7 @@ void AsteroidSpawner::CheckForCollisions(Bullet _bullets[], int _numBullets)
 				}
 			}
 		}
-	}
+	}*/
 }
 
 AsteroidSpawner::~AsteroidSpawner()

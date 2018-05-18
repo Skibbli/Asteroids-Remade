@@ -4,6 +4,8 @@
 #include "stdafx.h"
 
 #include "BaseObj.h"
+#include "Collider.h"
+
 
 class Bullet : public BaseObj
 {
@@ -20,16 +22,17 @@ class Bullet : public BaseObj
 		bool IsLive();
 		void SetLive(bool _isLive);
 		int GetDamage();
+		float GetRadius();
 
 	private:
 		int m_ID;
 		int m_dmg;
 
-		float m_vel;
+		float m_distTravelled, m_distLimit, m_vel, m_radius;
 
 		bool m_isLive;
 
-		float m_distTravelled, m_distLimit;
+		shared<Collider> m_collider;
 };
 
 #endif

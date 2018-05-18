@@ -35,6 +35,16 @@ void BaseObj::LimitCheck(float _width, float _height)
 		m_direction = ALLEGRO_PI * 2;
 }
 
+void BaseObj::SetIsLive(bool _isLive)
+{
+	m_isLive = _isLive;
+}
+
+bool BaseObj::GetIsLive()
+{
+	return m_isLive;
+}
+
 void BaseObj::Render()
 {
 
