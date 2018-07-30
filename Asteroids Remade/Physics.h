@@ -1,8 +1,10 @@
+#ifndef PHYSICS_H
+#define PHYSICS_H
+
 #include "stdafx.h"
 
-#include "BaseObj.h"
-#include "Collider.h"
 
+class Collider;
 
 class Physics
 {
@@ -14,7 +16,12 @@ class Physics
 
 		void AddCollider(weak<Collider> _col);
 		void DrawColliders();
+		void Shutdown();
+
+		void Reset();
 
 	private:
 		std::vector<weak<Collider>> m_colliders;
 };
+
+#endif

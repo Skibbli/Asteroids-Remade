@@ -3,95 +3,108 @@
 
 #include "stdafx.h"
 
-/// Key bindings for typical game actions
+class Gamestate;
+
+// Key bindings for typical game actions
 enum Keybinding
 {
-	RELOAD, INTERACT, CROUCH, PRONE, JUMP, MOVE_FORWARD, MOVE_BACKWARD, TURN_LEFT, TURN_RIGHT, STRAFE_LEFT, STRAFE_RIGHT,
+	RELOAD, INTERACT, CROUCH, PRONE, JUMP, FIRE, MOVE_FORWARD, MOVE_BACKWARD, TURN_LEFT, TURN_RIGHT, STRAFE_LEFT, STRAFE_RIGHT,
 	MAX_KEYBINDINGS
 };
 
 class Input
 {
 	public:
+		static Input& GetInstance();
+
+		// Initialises the Input module
+		void Initialise(ALLEGRO_DISPLAY *_display);
+		// Shuts down the Input module
+		void Shutdown();
+
+		// Checks for any input this frame
+		bool CheckForInput();
+
+		// Returns how much the mouse has moved since the last frame, between -1 and 1 for each axis
+		Vec2 GetMouseAxis();
+		// Returns the mouse position on the screen
+		Vec2 GetCursorScreenPos();
+		// Returns the mouse position on the Allegro window
+		Vec2 GetCursorWindowPos();
+
+		// Returns how much the mouse has moved since the last frame, between -1 and 1 for each axis
+		Vec2 GetGamePadAxis();
+
+		// Returns whether the given button is pressed
+		bool GetButton(int _button);
+		// Returns whether the given button was released that frame
+		bool GetButtonUp(int _button);
+		// Returns whether the given button was pressed that frame
+		bool GetButtonDown(int _button);
+		// Returns normalised mouse movement for the frame
+		glm::vec2 GetMouseMovement();
+		// Returns whether the given key is pressed
+		bool GetKey(int _keycode);
+		// Returns whether the given key was released that frame
+		bool GetKeyUp(int _keycode);
+		// Returns whether the given key was pressed that frame
+		bool GetKeyDown(int _keycode);
+		// Returns all keys pressed that frame
+		std::vector<int>& GetKeysPressed();
+
+		// Returns whether the key linked to the given event was pressed this frame
+		bool CheckEvent(Keybinding _event);
+		// Check if display is being closed
+		bool CheckDisplayClose();
+		// Reassign a keybinding
+		void ReassignKeybind(Keybinding _bind, int _keycode);
+	
+	private:
 		Input();
 		~Input();
 
-		/// Initialises the Input module
-		static void Initialise(ALLEGRO_DISPLAY &_display);
-		/// Shuts down the Input module
-		static void Shutdown();
+		// Resets mouse variables
+		void ResetMouseInput();
+		// Resets the Button array
+		void ResetButtons();
+		// Resets the Up Button array
+		void ResetUpButtons();
+		// Resets the Down Buttton array
+		void ResetDownButtons();
 
-		/// Checks for any input this frame
-		static bool CheckForInput();
+		// Resets keyboard variables
+		void ResetKeyboardInput();
+		// Resets the Key array
+		void ResetKeys();
+		// Resets the Up Key array
+		void ResetUpKeys();
+		// Resets the Down Key array
+		void ResetDownKeys();
 
-		/// Returns how much the mouse has moved since the last frame, between -1 and 1 for each axis
-		static Vec2 GetMouseAxis();
-		/// Returns the mouse position on the screen
-		static Vec2 GetCursorScreenPos();
-		/// Returns the mouse position on the Allegro window
-		static Vec2 GetCursorWindowPos();
+		// Resets the array tracking if a keybind has been input
+		void ResetKeyBindStatus();
 
-		/// Returns how much the mouse has moved since the last frame, between -1 and 1 for each axis
-		static Vec2 GetGamePadAxis();
+		// Checks if the given key is bound to an event
+		bool CheckIfBound(int _keycode);
 
-		/// Returns whether the given button is pressed
-		static bool GetButton(int _button);
-		/// Returns whether the given button was released that frame
-		static bool GetButtonUp(int _button);
-		/// Returns whether the given button was pressed that frame
-		static bool GetButtonDown(int _button);
-		/// Returns normalised mouse movement for the frame
-		static glm::vec2 GetMouseMovement();
-		/// Returns whether the given key is pressed
-		static bool GetKey(int _keycode);
-		/// Returns whether the given key was released that frame
-		static bool GetKeyUp(int _keycode);
-		/// Returns whether the given key was pressed that frame
-		static bool GetKeyDown(int _keycode);
+		Vec2 m_mousePos;
+		float m_mouseMoveLimit;
+		Vec2 m_mouseMovement;
+		bool m_mouseButtons[5];
+		bool m_mouseButtonsUp[5];
+		bool m_mouseButtonsDown[5];
+			 
+		bool m_keys[255];
+		bool m_keysUp[255];
+		bool m_keysDown[255];
+		std::map<int, Keybinding> m_keyMaps;
+		bool m_events[Keybinding::MAX_KEYBINDINGS];
+		bool m_displayClose;
 
-		/// Returns whether the key linked to the given event was pressed this frame
-		static bool CheckEvent(Keybinding _event);
-		/// Reassign a keybinding
-		static void ReassignKeybind(Keybinding _bind, int _keycode);
+		ALLEGRO_EVENT_QUEUE* m_eventQueue;
+		ALLEGRO_EVENT m_event;
 
-	private:
-		/// Resets the Button array
-		static void ResetButtons();
-		/// Resets the Up Button array
-		static void ResetUpButtons();
-		/// Resets the Down Buttton array
-		static void ResetDownButtons();
-
-		/// Resets the Key array
-		static void ResetKeys();
-		/// Resets the Up Key array
-		static void ResetUpKeys();
-		/// Resets the Down Key array
-		static void ResetDownKeys();
-
-		/// Resets the array tracking if a keybind has been input
-		static void ResetKeyBindStatus();
-
-		/// Checks if the given key is bound to an event
-		static bool CheckIfBound(int _keycode);
-
-		static void Update();
-
-		static Vec2 m_mousePos;
-		static float m_mouseMoveLimit;
-		static Vec2 m_mouseMovement;
-		static bool mouseButtons[5];
-		static bool mouseButtonsUp[5];
-		static bool mouseButtonsDown[5];
-
-		static bool keys[255];
-		static bool keysUp[255];
-		static bool keysDown[255];
-		static std::map<int, Keybinding> keyMaps;
-		static bool events[Keybinding::MAX_KEYBINDINGS];
-
-		static ALLEGRO_EVENT_QUEUE* m_eventQueue;
-		static ALLEGRO_EVENT m_event;
+		std::vector<int> m_pressedKeys;
 };
 
 #endif

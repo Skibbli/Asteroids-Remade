@@ -1,13 +1,18 @@
+#ifndef TITLE_H
+#define TITLE_H
+
 #include "stdafx.h"
 
 #include "Gamestate.h"
-#include "Button.h"
 
+
+class CircleButton;
+class RectButton;
 
 class Title : public Gamestate
 {
 	public:
-		Title(GamestateManager *_manager, ALLEGRO_DISPLAY *_display);
+		Title();
 		~Title();
 
 		void Start();
@@ -16,6 +21,14 @@ class Title : public Gamestate
 		void Shutdown();
 
 	private:
-		CircleButton m_circleButton;
-		RectButton m_rectButton;
+		RectButton* m_startButton;
+		RectButton* m_hiScoresButton;
+		RectButton* m_quitButton;
+
+		Bitmap m_cursorBMP;
+		ALLEGRO_MOUSE_CURSOR *m_cursor;
+
+		weak<ALLEGRO_FONT> m_font72;
 };
+
+#endif

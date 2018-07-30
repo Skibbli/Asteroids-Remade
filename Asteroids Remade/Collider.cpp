@@ -3,14 +3,11 @@
 #include "Collider.h"
 
 
-Collider::Collider()
-{
+Collider::Collider() {}
 
-}
-
-Collider::Collider(OBJECTS _obj, Vec2 _pos, float _radius)
+bool Collider::GetIsLive()
 {
-	
+	return m_isLive;
 }
 
 void Collider::SetIsLive(bool _isLive)
@@ -18,41 +15,40 @@ void Collider::SetIsLive(bool _isLive)
 	m_isLive = _isLive;
 }
 
-bool Collider::GetIsLive()
+float Collider::GetDamage()
 {
-	return m_isLive;
+	return m_dmg;
 }
 
-void Collider::CheckCollision(weak<Collider> _col)
+void Collider::SetDamage(int _dmg)
 {
-	Vec2 distance = m_pos - _col.lock().get()->m_pos;
-	float length = glm::length(distance);
-
-	if (length <= m_radius + _col.lock().get()->m_radius)
-	{
-		m_collDets.push_back(Collision(_col, true));
-		_col.lock().get()->AddCollision(shared_from_this());
-	}
+	m_dmg = _dmg;
 }
 
-OBJECTS Collider::GetObjType()
+Vec2 Collider::GetPos()
+{
+	return m_pos;
+}
+
+Enums::OBJECTS Collider::GetObjectType()
 {
 	return m_objType;
 }
 
-std::vector<Collisions> Collider::GetCollision()
+Enums::COLTYPE Collider::GetColliderType()
 {
-	return &m_collDets;
+	return m_colType;
 }
 
-void Collider::DrawCollider()
+void Collider::SetColliderType(Enums::OBJECTS _type)
 {
-	al_draw_circle(m_pos.x, m_pos.y, m_radius, al_map_rgb(255, 0, 255), 3);
+	m_objType = _type;
 }
 
-void Collider::AddCollision(weak<Collider> _col)
+// Adds collision details for a collision that has occured with this collider
+void Collider::AddCollision(Enums::OBJECTS _obj, int _dmg)
 {
-	m_collDets.push_back(Collision(_col, true));
+	m_collDets.push_back(Collision(_obj, _dmg));
 }
 
 void Collider::ResetCollisions()
@@ -60,7 +56,16 @@ void Collider::ResetCollisions()
 	m_collDets.clear();
 }
 
-Collider::~Collider()
+// Gets objects this collider has collided with this frame
+std::vector<Collision>& Collider::GetCollisions()
 {
-
+	return m_collDets;
 }
+
+void Collider::CheckCollision(weak<Collider> _col) {}
+
+void Collider::Update() {}
+
+void Collider::DrawCollider() {}
+
+Collider::~Collider() {}

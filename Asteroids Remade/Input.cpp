@@ -1,43 +1,18 @@
 #include "stdafx.h"
 
 #include "Input.h"
+#include "Gamestate.h"
 
-/// Static variable declaration
-float Input::m_mouseMoveLimit = 100.0f;
-Vec2 Input::m_mouseMovement;
-bool Input::mouseButtons[5];
-bool Input::mouseButtonsUp[5];
-bool Input::mouseButtonsDown[5];
+Input::Input() {}
 
-bool Input::keys[255];
-bool Input::keysUp[255];
-bool Input::keysDown[255];
-
-Vec2 Input::m_mousePos(0.0f, 0.0f);
-
-std::map<int, Keybinding> Input::keyMaps;
-bool Input::events[Keybinding::MAX_KEYBINDINGS];
-
-ALLEGRO_EVENT_QUEUE* Input::m_eventQueue = nullptr;
-ALLEGRO_EVENT Input::m_event;
-
-Input::Input()
+Input& Input::GetInstance()
 {
+	static Input instance;
 
+	return instance;
 }
 
-void Input::Shutdown()
-{
-	///m_eventQueue = nullptr;
-	al_destroy_event_queue(m_eventQueue);
-}
-
-Input::~Input()
-{
-
-}
-
-void Input::Initialise(ALLEGRO_DISPLAY &_display)
+void Input::Initialise(ALLEGRO_DISPLAY *_display)
 {
 	ResetButtons();
 	ResetUpButtons();
@@ -47,19 +22,21 @@ void Input::Initialise(ALLEGRO_DISPLAY &_display)
 	ResetDownKeys();
 	ResetKeyBindStatus();
 
-	keyMaps.insert(std::pair<int, Keybinding>(ALLEGRO_KEY_R, RELOAD));
-	keyMaps.insert(std::pair<int, Keybinding>(ALLEGRO_KEY_E, INTERACT));
-	keyMaps.insert(std::pair<int, Keybinding>(ALLEGRO_KEY_SPACE, JUMP));
-	keyMaps.insert(std::pair<int, Keybinding>(ALLEGRO_KEY_UP, MOVE_FORWARD));
-	keyMaps.insert(std::pair<int, Keybinding>(ALLEGRO_KEY_DOWN, MOVE_BACKWARD));
-	keyMaps.insert(std::pair<int, Keybinding>(ALLEGRO_KEY_LEFT, STRAFE_LEFT));
-	keyMaps.insert(std::pair<int, Keybinding>(ALLEGRO_KEY_RIGHT, STRAFE_RIGHT));
-	keyMaps.insert(std::pair<int, Keybinding>(ALLEGRO_KEY_W, MOVE_FORWARD));
-	keyMaps.insert(std::pair<int, Keybinding>(ALLEGRO_KEY_A, STRAFE_LEFT));
-	keyMaps.insert(std::pair<int, Keybinding>(ALLEGRO_KEY_S, MOVE_BACKWARD));
-	keyMaps.insert(std::pair<int, Keybinding>(ALLEGRO_KEY_D, STRAFE_RIGHT));
-	keyMaps.insert(std::pair<int, Keybinding>(ALLEGRO_KEY_LCTRL, CROUCH));
-	keyMaps.insert(std::pair<int, Keybinding>(ALLEGRO_KEY_ALT, PRONE));
+	m_displayClose = false;
+
+	m_keyMaps.insert(std::pair<int, Keybinding>(ALLEGRO_KEY_R, RELOAD));
+	m_keyMaps.insert(std::pair<int, Keybinding>(ALLEGRO_KEY_E, INTERACT));
+	m_keyMaps.insert(std::pair<int, Keybinding>(ALLEGRO_KEY_SPACE, FIRE));
+	m_keyMaps.insert(std::pair<int, Keybinding>(ALLEGRO_KEY_UP, MOVE_FORWARD));
+	m_keyMaps.insert(std::pair<int, Keybinding>(ALLEGRO_KEY_DOWN, MOVE_BACKWARD));
+	m_keyMaps.insert(std::pair<int, Keybinding>(ALLEGRO_KEY_LEFT, STRAFE_LEFT));
+	m_keyMaps.insert(std::pair<int, Keybinding>(ALLEGRO_KEY_RIGHT, STRAFE_RIGHT));
+	m_keyMaps.insert(std::pair<int, Keybinding>(ALLEGRO_KEY_W, MOVE_FORWARD));
+	m_keyMaps.insert(std::pair<int, Keybinding>(ALLEGRO_KEY_A, TURN_LEFT));
+	m_keyMaps.insert(std::pair<int, Keybinding>(ALLEGRO_KEY_S, MOVE_BACKWARD));
+	m_keyMaps.insert(std::pair<int, Keybinding>(ALLEGRO_KEY_D, TURN_RIGHT));
+	m_keyMaps.insert(std::pair<int, Keybinding>(ALLEGRO_KEY_LCTRL, CROUCH));
+	m_keyMaps.insert(std::pair<int, Keybinding>(ALLEGRO_KEY_ALT, PRONE));
 
 	m_eventQueue = al_create_event_queue();
 
@@ -72,12 +49,6 @@ void Input::Initialise(ALLEGRO_DISPLAY &_display)
 
 	al_register_event_source(m_eventQueue, al_get_keyboard_event_source());
 	al_register_event_source(m_eventQueue, al_get_mouse_event_source());
-	al_register_event_source(m_eventQueue, al_get_display_event_source(&_display));
-}
-
-void Input::Update()
-{
-
 }
 
 bool Input::CheckForInput()
@@ -88,56 +59,68 @@ bool Input::CheckForInput()
 	ResetDownButtons();
 	ResetUpKeys();
 	ResetDownKeys();
-	ResetKeyBindStatus();
+	m_pressedKeys.clear();
+
+	m_displayClose = false;
 
 	while (al_get_next_event(m_eventQueue, &m_event))
 	{
 		switch (m_event.type)
 		{
-		case ALLEGRO_EVENT_KEY_DOWN:
-		{
-									   keysDown[m_event.keyboard.keycode] = true;
-									   keys[m_event.keyboard.keycode] = true;
+			case ALLEGRO_EVENT_KEY_CHAR:
+			{
+				m_pressedKeys.push_back(m_event.keyboard.unichar);
+			}
+			/// Intentional break missing
+			case ALLEGRO_EVENT_KEY_DOWN:
+			{
+				m_keysDown[m_event.keyboard.keycode] = true;
+				m_keys[m_event.keyboard.keycode] = true;
+				
+				if (CheckIfBound(m_event.keyboard.keycode))
+				{
+					m_events[m_keyMaps[m_event.keyboard.keycode]] = true;
+				}
+			}
+			break;
+			case ALLEGRO_EVENT_KEY_UP:
+			{
+				m_keysUp[m_event.keyboard.keycode] = true;
+				m_keys[m_event.keyboard.keycode] = false;
 
-									   if (CheckIfBound(m_event.keyboard.keycode))
-									   {
-										   events[keyMaps[m_event.keyboard.keycode]] = true;
-									   }
-		}
+				if (CheckIfBound(m_event.keyboard.keycode))
+				{
+					m_events[m_keyMaps[m_event.keyboard.keycode]] = false;
+				}
+			}
 			break;
-		case ALLEGRO_EVENT_KEY_UP:
-		{
-									 keysUp[m_event.keyboard.keycode] = true;
-									 keys[m_event.keyboard.keycode] = false;
-		}
-			break;
-		case ALLEGRO_EVENT_MOUSE_AXES:
-		{
-										 m_mousePos.x = m_event.mouse.x;
-										 m_mousePos.y = m_event.mouse.y;
+			case ALLEGRO_EVENT_MOUSE_AXES:
+			{
+				m_mousePos.x = m_event.mouse.x;
+				m_mousePos.y = m_event.mouse.y;
 
-										 m_mouseMovement.x = m_event.mouse.dx / m_mouseMoveLimit;
-										 m_mouseMovement.y = m_event.mouse.dy / m_mouseMoveLimit;
-		}
+				m_mouseMovement.x = m_event.mouse.dx / m_mouseMoveLimit;
+				m_mouseMovement.y = m_event.mouse.dy / m_mouseMoveLimit;
+			}
 			break;
-		case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN:
-		{
-												mouseButtons[m_event.mouse.button - 1] = true;
-												mouseButtonsDown[m_event.mouse.button - 1] = true;
-		}
+			case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN:
+			{
+				m_mouseButtons[m_event.mouse.button - 1] = true;
+				m_mouseButtonsDown[m_event.mouse.button - 1] = true;
+			}
 			break;
-		case ALLEGRO_EVENT_MOUSE_BUTTON_UP:
-		{
-											  mouseButtons[m_event.mouse.button - 1] = false;
-											  mouseButtonsUp[m_event.mouse.button - 1] = true;
-		}
+			case ALLEGRO_EVENT_MOUSE_BUTTON_UP:
+			{
+				m_mouseButtons[m_event.mouse.button - 1] = false;
+				m_mouseButtonsUp[m_event.mouse.button - 1] = true;
+			}
 			break;
-		case ALLEGRO_EVENT_DISPLAY_CLOSE:
-		{
-											return false;
-		}
+			case ALLEGRO_EVENT_DISPLAY_CLOSE:
+			{
+				m_displayClose = true;
+			}
 			break;
-		default:;
+			default:;
 		}
 	}
 
@@ -151,16 +134,19 @@ Vec2 Input::GetMouseAxis()
 
 Vec2 Input::GetCursorScreenPos()
 {
+	// Not implemented yet
 	return Vec2();
 }
 
 Vec2 Input::GetCursorWindowPos()
 {
+	// Not implemented yet
 	return Vec2();
 }
 
 Vec2 Input::GetGamePadAxis()
 {
+	// Not implemented yet
 	return Vec2();
 }
 
@@ -173,19 +159,19 @@ Vec2 Input::GetGamePadAxis()
 /// Returns whether the given button is pressed
 bool Input::GetButton(int _button)
 {
-	return mouseButtons[_button];
+	return m_mouseButtons[_button];
 }
 
 //// Returns whether the given button was released this frame
 bool Input::GetButtonUp(int _button)
 {
-	return mouseButtonsUp[_button];
+	return m_mouseButtonsUp[_button];
 }
 
 //// Returns whether the given button was pressed this frame
 bool Input::GetButtonDown(int _button)
 {
-	return mouseButtonsDown[_button];
+	return m_mouseButtonsDown[_button];
 }
 
 //// Returns normalised mouse movement for this frame
@@ -201,32 +187,63 @@ glm::vec2 Input::GetMouseMovement()
 //// Returns whether the given key is pressed
 bool Input::GetKey(int _keycode)
 {
-	return keys[_keycode];
+	return m_keys[_keycode];
 }
 
 //// Returns whether the given key was released this frame
 bool Input::GetKeyUp(int _keycode)
 {
-	return keysUp[_keycode];
+	return m_keysUp[_keycode];
 }
 
 //// Returns whether the given key was pressed this frame
 bool Input::GetKeyDown(int _keycode)
 {
-	return keysDown[_keycode];
+	return m_keysDown[_keycode];
 }
 
-//// Returns whether the key linked to the given event was pressed this frame
+/// Returns all keys pressed down that frame
+std::vector<int>& Input::GetKeysPressed()
+{
+	return m_pressedKeys;
+}
+
+//// Returns whether the given event was triggered this frame
 bool Input::CheckEvent(Keybinding _event)
 {
-	return events[_event];
+	return m_events[_event];
+}
+
+bool Input::CheckDisplayClose()
+{
+	return m_displayClose;
+}
+
+void Input::ReassignKeybind(Keybinding _bind, int _keycode)
+{
+	if (CheckIfBound(_keycode))
+	{
+		m_keyMaps[_keycode] = _bind;
+	}
+
+	else
+		m_keyMaps.insert(std::pair<int, Keybinding>(_keycode, _bind));
+}
+
+/// Reset mouse input functions
+
+void Input::ResetMouseInput()
+{
+	ResetButtons();
+	ResetDownButtons();
+	ResetUpButtons();
 }
 
 void Input::ResetButtons()
 {
 	for (int i = 0; i < 5; i++)
 	{
-		mouseButtons[i] = false;
+		m_mouseButtons[i] = false;
 	}
 }
 
@@ -234,7 +251,7 @@ void Input::ResetUpButtons()
 {
 	for (int i = 0; i < 5; i++)
 	{
-		mouseButtonsUp[i] = false;
+		m_mouseButtonsUp[i] = false;
 	}
 }
 
@@ -242,15 +259,25 @@ void Input::ResetDownButtons()
 {
 	for (int i = 0; i < 5; i++)
 	{
-		mouseButtonsDown[i] = false;
+		m_mouseButtonsDown[i] = false;
 	}
+}
+
+/// Reset keyboard input functions
+
+void Input::ResetKeyboardInput()
+{
+	ResetKeys();
+	ResetDownKeys();
+	ResetUpKeys();
+	m_pressedKeys.clear();
 }
 
 void Input::ResetKeys()
 {
 	for (int i = 0; i < 255; i++)
 	{
-		keys[i] = false;
+		m_keys[i] = false;
 	}
 }
 
@@ -258,7 +285,7 @@ void Input::ResetUpKeys()
 {
 	for (int i = 0; i < 255; i++)
 	{
-		keysUp[i] = false;
+		m_keysUp[i] = false;
 	}
 }
 
@@ -266,7 +293,7 @@ void Input::ResetDownKeys()
 {
 	for (int i = 0; i < 255; i++)
 	{
-		keysDown[i] = false;
+		m_keysDown[i] = false;
 	}
 }
 
@@ -274,17 +301,18 @@ void Input::ResetKeyBindStatus()
 {
 	for (int i = 0; i < MAX_KEYBINDINGS; i++)
 	{
-		events[i] = false;
+		m_events[i] = false;
 	}
 }
 
+// Checks if the given key is bound to an action e.g. shoot, jump etc
 bool Input::CheckIfBound(int _keycode)
 {
-	for each (std::pair<int, Keybinding> bind in keyMaps)
+	for each (std::pair<int, Keybinding> bind in m_keyMaps)
 	{
 		if (m_event.keyboard.keycode == bind.first)
 		{
-			events[bind.second] = true;
+			m_events[bind.second] = true;
 			return true;
 		}
 	}
@@ -292,13 +320,9 @@ bool Input::CheckIfBound(int _keycode)
 	return false;
 }
 
-void Input::ReassignKeybind(Keybinding _bind, int _keycode)
+void Input::Shutdown()
 {
-	if (CheckIfBound(_keycode))
-	{
-		keyMaps[_keycode] = _bind;
-	}
-
-	else
-		keyMaps.insert(std::pair<int, Keybinding>(_keycode, _bind));
+	al_destroy_event_queue(m_eventQueue);
 }
+
+Input::~Input() {}

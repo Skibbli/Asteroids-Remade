@@ -3,35 +3,38 @@
 
 #include "stdafx.h"
 
-#include "BaseObj.h"
-#include "Collider.h"
+#include "BaseObject.h"
+#include "Explosion.h"
 
-class Asteroid : public BaseObj
+
+class CircleCollider;
+
+// Base class for various asteroid sizes
+class Asteroid : public BaseObject
 {
 	public:
 		Asteroid();
 		~Asteroid();
 
-		virtual void Start();
+		void Start();
 		bool Update();
-		virtual void Render();
+		void Render();
+		void Shutdown();
 
 		virtual void Spawn();
-		bool IsLive() { return m_isLive; };
-		bool CheckCollision(Vec2 _pos, float _radius);
+
+		Vec2 GetPos();		
+		void CheckCollisions();
 		void LimitCheck();
-		virtual void TakeDmg(int _dmg);
 
-		protected:
-			int m_health, m_maxHealth, m_rotDir;
+	protected:
+		int m_health, m_maxHealth, m_rotDir, m_sizeID, m_colDmg;
 		
-			float m_vel, m_radius, m_size, m_frameNo, m_frameCount, m_rotation;
-			bool m_isLive;
+		float m_vel, m_radius, m_size, m_frameNo, m_frameCount, m_rotation;
 
-			shared<Collider> m_collider;
+		Explosion m_explosion;
 
-		private:
-			
+		shared<CircleCollider> m_collider;
 };
 
 #endif
@@ -41,10 +44,6 @@ class BigAsteroid : public Asteroid
 	public:
 		BigAsteroid();
 		~BigAsteroid();
-
-		void Start();
-		bool Update();
-		void Render();		
 
 		void Spawn(Vec2 _pos);
 
@@ -58,10 +57,6 @@ class MedAsteroid : public Asteroid
 		MedAsteroid();
 		~MedAsteroid();
 
-		void Start();
-		bool Update();
-		void Render();
-
 		void Spawn(Vec2 _pos);
 
 	private:
@@ -73,10 +68,6 @@ class SmallAsteroid : public Asteroid
 	public:
 		SmallAsteroid();
 		~SmallAsteroid();
-
-		void Start();
-		bool Update();
-		void Render();
 
 		void Spawn(Vec2 _pos);
 

@@ -18,13 +18,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v110</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v110</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -53,6 +53,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\Allegro 5\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>allegro-5.0.10-monolith-md.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Windows</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -62,57 +63,87 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\Allegro 5\include;$(SolutionDir)Dependencies\glm;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Dependencies\Allegro 5\include;Dependencies\glm;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\Allegro 5\lib;$(SolutionDir)Dependencies\glm</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>Dependencies\Allegro 5\lib;Dependencies\glm</AdditionalLibraryDirectories>
       <AdditionalDependencies>allegro-5.0.10-monolith-md.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Windows</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Asteroid.cpp" />
     <ClCompile Include="AsteroidSpawner.cpp" />
-    <ClCompile Include="BaseObj.cpp" />
+    <ClCompile Include="BaseObject.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Button.cpp" />
+    <ClCompile Include="CircleCollider.cpp" />
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="Core.cpp" />
+    <ClCompile Include="Explosion.cpp" />
     <ClCompile Include="Fade.cpp" />
+    <ClCompile Include="GameOver.cpp" />
     <ClCompile Include="Gamestate.cpp" />
     <ClCompile Include="GamestateManager.cpp" />
+    <ClCompile Include="HiScore.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Maths.cpp" />
+    <ClCompile Include="Options.cpp" />
+    <ClCompile Include="Pause.cpp" />
     <ClCompile Include="Physics.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Powerup.cpp" />
+    <ClCompile Include="PowerupSpawner.cpp" />
+    <ClCompile Include="RectangleCollider.cpp" />
     <ClCompile Include="Resources.cpp" />
+    <ClCompile Include="Slider.cpp" />
     <ClCompile Include="Time.cpp" />
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="UFO.cpp" />
+    <ClCompile Include="UFOSpawner.cpp" />
+    <ClCompile Include="Weapon.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Asteroid.h" />
     <ClInclude Include="AsteroidSpawner.h" />
-    <ClInclude Include="BaseObj.h" />
+    <ClInclude Include="BaseObject.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Button.h" />
+    <ClInclude Include="CircleCollider.h" />
     <ClInclude Include="Collider.h" />
     <ClInclude Include="Core.h" />
+    <ClInclude Include="Explosion.h" />
     <ClInclude Include="Fade.h" />
+    <ClInclude Include="GameOver.h" />
     <ClInclude Include="Gamestate.h" />
     <ClInclude Include="GamestateManager.h" />
+    <ClInclude Include="HiScore.h" />
+    <ClInclude Include="Maths.h" />
+    <ClInclude Include="Options.h" />
+    <ClInclude Include="Pause.h" />
+    <ClInclude Include="Powerup.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="Physics.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="PowerupSpawner.h" />
+    <ClInclude Include="RectangleCollider.h" />
     <ClInclude Include="Resources.h" />
+    <ClInclude Include="ResourceStructs.h" />
+    <ClInclude Include="Slider.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Time.h" />
     <ClInclude Include="Title.h" />
     <ClInclude Include="Transform.h" />
+    <ClInclude Include="UFO.h" />
+    <ClInclude Include="UFOSpawner.h" />
+    <ClInclude Include="Weapon.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

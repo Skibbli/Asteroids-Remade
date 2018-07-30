@@ -6,12 +6,14 @@
 #include "Gamestate.h"
 #include "Player.h"
 #include "AsteroidSpawner.h"
+#include "PowerupSpawner.h"
+#include "UFOSpawner.h"
 
 
 class Level : public Gamestate
 {
 	public:
-		Level(GamestateManager *_manager, ALLEGRO_DISPLAY *_display);
+		Level();
 		~Level();
 
 		void Start();
@@ -19,21 +21,23 @@ class Level : public Gamestate
 		void Render();
 		void Shutdown();
 
+		void UpdateDisplaySize(DisplayInfo _displaySize);
+
 	private:
-		int m_numBullets;
+		void GetInput();
 
-		float m_displayWidth, m_displayHeight;
+		bool m_gameOver;
 
-		Player m_player;
-		
-		Bullet *m_bullets;
+		Player m_player;	
 
-		AsteroidSpawner m_spawner;
-		
-		weak<ALLEGRO_FONT> m_font;
+		// Spawns and controls UFOs
+		UFOSpawner m_ufoSpawner;
+		// Spawns and controls Asteroids
+		AsteroidSpawner m_astSpawner;
+		// Spawns and controls powerups
+		PowerupSpawner m_pupSpawner;
 
-		void FireBullet();
-		bool GetInput();	
+		weak<MusicSample> m_BGM;
 };
 
 #endif

@@ -3,50 +3,67 @@
 
 #include "stdafx.h"
 
-#include "BaseObj.h"
-#include "Bullet.h"
+#include "BaseObject.h"
+#include "Weapon.h"
+#include "Explosion.h"
 
-class Player : public BaseObj
+
+class CircleCollider;
+
+class Player : public BaseObject
 {
 	public:
 		Player();
 		~Player();
 
-		virtual void Start(Bullet *_bullets);
-		virtual bool Update();
-		virtual void Render();
+		void Start();
+		bool Update();
+		void Render();
+		void Shutdown();
 
 		void Input();
-		bool Fire();
+		// Slows the ship if no movement input is detected
 		void Deccelerate();
-		void GetBulletDets(Bullet &_bullet);
 		void CheckCollisions();
+		void ReduceLife();
 
-		Vec2 GetPos() { return m_pos; };
-		float GetXVel() { return m_vel.x; };
-		float GetYVel() { return m_vel.y; };
-		float GetDirection() { return m_direction; };
+		void ChangeWeapon(int _weap);
+
+		Vec2 GetPos();
+		int GetScore();
+		void AddScore(int _score);
 
 	private:
-		int m_ID;
-		float m_boundRadius;
-		int m_health, m_score, m_lives;
+		int m_score;
+		int m_lives;
 
-		bool m_isFiring;
-		int m_fireRate;
-		int m_fireCD;
+		// Temporary invincibility counters
+		bool m_tempInv;
+		float m_tempInvTimer;
+		float m_tempInvCD;
 
-		int m_dmg;
-		int m_bulletSpeed;
+		// Weapon powerup timers
+		bool m_weapPUP;
+		bool m_firing;
+		float m_weaponCD;
+		float m_weaponTimer;
 
+		// Velocity variables
 		Vec2 m_vel;
 		float m_totalVelocity;
 		float m_maxVelocity;
 		float m_acceleration;
 
-		shared<Collider> m_collider;
+		float m_boundRadius;
 
-		Bullet *m_bullets;
+		std::vector<Weapon*> m_guns;
+		int m_activeGun;
+
+		weak<ALLEGRO_FONT> m_font;
+
+		Explosion m_explosion;
+
+		shared<CircleCollider> m_collider;
 };
 
 #endif

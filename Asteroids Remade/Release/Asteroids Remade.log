@@ -1,26 +1,51 @@
-﻿Build started 11/04/2018 14:12:23.
-     1>Project "C:\Users\Silver\Documents\Visual Studio 2013\Projects\Asteroids Remade\Asteroids Remade\Asteroids Remade.vcxproj" on node 2 (Build target(s)).
+﻿Build started 30/07/2018 03:19:25.
+     1>Project "C:\Users\Silver\Documents\Visual Studio 2012\Projects\Asteroids Remade - And Another\Asteroids Remade\Asteroids Remade.vcxproj" on node 2 (Build target(s)).
+       Project file contains ToolsVersion="12.0". This toolset may be unknown or missing, in which case you may be able to resolve this by installing the appropriate version of MSBuild, or the build may have been forced to a particular ToolsVersion for policy reasons. Treating the project as if it had ToolsVersion="4.0". For more information, please see http://go.microsoft.com/fwlink/?LinkId=291333.
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"C:\Users\Silver\Documents\Visual Studio 2013\Projects\Asteroids Remade\Dependencies\Allegro 5\include" /I"C:\Users\Silver\Documents\Visual Studio 2013\Projects\Asteroids Remade\Dependencies\glm" /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D _MBCS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Level.cpp
-         Level.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /I"Dependencies\Allegro 5\include" /IDependencies\glm /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D _MBCS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt HiScore.cpp
+         HiScore.cpp
        Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Silver\Documents\Visual Studio 2013\Projects\Asteroids Remade\Release\Asteroids Remade.exe" /NOLOGO /LIBPATH:"C:\Users\Silver\Documents\Visual Studio 2013\Projects\Asteroids Remade\Dependencies\Allegro 5\lib" /LIBPATH:"C:\Users\Silver\Documents\Visual Studio 2013\Projects\Asteroids Remade\Dependencies\glm" "allegro-5.0.10-monolith-md.lib" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Silver\Documents\Visual Studio 2013\Projects\Asteroids Remade\Release\Asteroids Remade.pdb" /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Silver\Documents\Visual Studio 2013\Projects\Asteroids Remade\Release\Asteroids Remade.lib" /MACHINE:X86 /SAFESEH Release\Asteroid.obj
-         Release\BaseObj.obj
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Silver\Documents\Visual Studio 2012\Projects\Asteroids Remade - And Another\Release\Asteroids Remade.exe" /NOLOGO /LIBPATH:"Dependencies\Allegro 5\lib" /LIBPATH:Dependencies\glm "allegro-5.0.10-monolith-md.lib" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Silver\Documents\Visual Studio 2012\Projects\Asteroids Remade - And Another\Release\Asteroids Remade.pdb" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Silver\Documents\Visual Studio 2012\Projects\Asteroids Remade - And Another\Release\Asteroids Remade.lib" /MACHINE:X86 /SAFESEH Release\Asteroid.obj
+         Release\AsteroidSpawner.obj
+         Release\BaseObject.obj
          Release\Bullet.obj
+         Release\Button.obj
+         Release\CircleCollider.obj
+         Release\Collider.obj
+         Release\Core.obj
+         Release\Explosion.obj
+         Release\Fade.obj
+         Release\GameOver.obj
          Release\Gamestate.obj
          Release\GamestateManager.obj
+         Release\HiScore.obj
          Release\Input.obj
          Release\Level.obj
          Release\Main.obj
+         Release\Maths.obj
+         Release\Options.obj
+         Release\Pause.obj
+         Release\Physics.obj
          Release\Player.obj
+         Release\Powerup.obj
+         Release\PowerupSpawner.obj
+         Release\RectangleCollider.obj
          Release\Resources.obj
+         Release\Slider.obj
          Release\Time.obj
+         Release\Title.obj
+         Release\Transform.obj
+         Release\UFO.obj
+         Release\UFOSpawner.obj
+         Release\Weapon.obj
          Generating code
-     1>c:\users\silver\documents\visual studio 2013\projects\asteroids remade\asteroids remade\level.cpp(56): warning C4715: 'Level::Update' : not all control paths return a value
+     1>c:\users\silver\documents\visual studio 2012\projects\asteroids remade - and another\asteroids remade\resources.cpp(201): warning C4715: 'Resources::LoadSFXSample' : not all control paths return a value
+     1>c:\users\silver\documents\visual studio 2012\projects\asteroids remade - and another\asteroids remade\resources.cpp(238): warning C4715: 'Resources::LoadMusicSample' : not all control paths return a value
+     1>c:\users\silver\documents\visual studio 2012\projects\asteroids remade - and another\asteroids remade\resources.cpp(164): warning C4715: 'Resources::LoadFont' : not all control paths return a value
          Finished generating code
-         Asteroids Remade.vcxproj -> C:\Users\Silver\Documents\Visual Studio 2013\Projects\Asteroids Remade\Release\Asteroids Remade.exe
-     1>Done Building Project "C:\Users\Silver\Documents\Visual Studio 2013\Projects\Asteroids Remade\Asteroids Remade\Asteroids Remade.vcxproj" (Build target(s)).
+         Asteroids Remade.vcxproj -> C:\Users\Silver\Documents\Visual Studio 2012\Projects\Asteroids Remade - And Another\Release\Asteroids Remade.exe
+     1>Done Building Project "C:\Users\Silver\Documents\Visual Studio 2012\Projects\Asteroids Remade - And Another\Asteroids Remade\Asteroids Remade.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:05.39
+Time Elapsed 00:00:05.46

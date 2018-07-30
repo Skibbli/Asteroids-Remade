@@ -3,36 +3,37 @@
 
 #include "stdafx.h"
 
-#include "BaseObj.h"
-#include "Collider.h"
+#include "BaseObject.h"
 
 
-class Bullet : public BaseObj
+class CircleCollider;
+
+class Bullet : public BaseObject
 {
 	public:
 		Bullet();
 		~Bullet();
 
-		void Start();
+		void Start(Enums::OBJECTS _type, std::string _imageName, int _dmg, float _vel);
 		bool Update();
 		void Render();
+		void Shutdown();
 
-		void Spawn(Vec2 _pos, float _dir, int _dmg);
-
-		bool IsLive();
-		void SetLive(bool _isLive);
-		int GetDamage();
-		float GetRadius();
+		void Spawn(Vec2 _pos, float _dir, float _vel, bool _inv);
+		void Despawn();
+		void CheckCollisions();
 
 	private:
-		int m_ID;
+		bool m_inv;
+
 		int m_dmg;
 
 		float m_distTravelled, m_distLimit, m_vel, m_radius;
 
-		bool m_isLive;
+		Enums::OBJECTS m_bulletType;
 
-		shared<Collider> m_collider;
+		shared<CircleCollider> m_collider;
+		weak<SFXSample> m_collisionFX;
 };
 
 #endif

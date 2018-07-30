@@ -17,15 +17,23 @@
 #include <string>
 #include <map>
 #include <random>
+#include <functional>
 
 #define weak std::weak_ptr
 #define shared std::shared_ptr
 #define degToRad (ALLEGRO_PI/180)
 
-#define Vec2 glm::vec2
-enum AXIS { X_AXIS, Y_AXIS, Z_AXIS };
+#define Uint unsigned int
 
-enum COLOUR { RED, GREEN, BLUE, WHITE, BLACK };
-enum OBJECTS { PLAYER, ASTEROID, BULLET, UFO, POWERUP };
+#define Vec2 glm::vec2
+
+namespace Enums
+{
+	enum AXIS { X_AXIS, Y_AXIS, Z_AXIS };
+	enum COLOUR { RED, GREEN, BLUE, WHITE, BLACK };
+	enum OBJECTS { PLAYER, ASTEROID, UFO, PLAYER_BULLET, UFO_BULLET, DOUBLE_LASER, BIG_LASER, MULTI_LASER, EXTRA_LIFE };
+	enum COLTYPE { CIRCLE, SQUARE, RECTANGLE };
+	enum GAMESTATE { TITLE, LEVEL, OPTIONS, HISCORES, QUIT, NONE };
+}
 
 #endif

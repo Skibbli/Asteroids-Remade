@@ -2,22 +2,7 @@
 
 #include "Transform.h"
 
-Transform::Transform()
-{
 
-}
+Transform::Transform() {}
 
-Vec2 Transform::GetPos()
-{
-	return m_pos;
-}
-
-float Transform::GetDirection()
-{
-	return m_direction;
-}
-
-Transform::~Transform()
-{
-
-}
+Transform::~Transform() {}

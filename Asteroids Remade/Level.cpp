@@ -4,126 +4,97 @@
 #include "Input.h"
 #include "Resources.h"
 #include "Fade.h"
+#include "Core.h"
+#include "Title.h"
+#include "Pause.h"
 
 
-Level::Level(GamestateManager *_manager, ALLEGRO_DISPLAY *_display)
-{
-	m_stateManager = _manager;
-	m_display = _display;
-}
+Level::Level() {}
 
 void Level::Start()
 {
 	m_background = Resources::GetInstance().LoadBmp("SpaceBG.png");
-	m_font = Resources::GetInstance().LoadFont("arial.ttf");
-	m_cursor = Resources::GetInstance().LoadBmp("Cursor.png");
+	m_BGM = Resources::GetInstance().LoadMusicSample("Background Music.ogg");
 
-	m_displayWidth = al_get_display_width(m_display);
-	m_displayHeight = al_get_display_height(m_display);
+	m_player.Start();
+	m_ufoSpawner.Start(&m_player);
+	m_astSpawner.Start(&m_player);
+	m_pupSpawner.Start();
 
-	m_player.Start(m_bullets);
-	m_spawner.Start();
+	m_gameOver = false;
 
-	m_numBullets = 200;
-	m_bullets = new Bullet[m_numBullets];
+	al_hide_mouse_cursor(Core::GetInstance().GetDisplay());
+	Core::GetInstance().GetStateManager().AddState(std::make_shared<Fade>(Enums::COLOUR::BLACK, 1, true, Enums::GAMESTATE::NONE));
+
+	m_BGM.lock()->PlaySample();
 }
 
 bool Level::Update()
 {
-	if (!GetInput())
-		return false;
+	GetInput();
 
-	if (m_player.Update())
-		FireBullet();
-
-	for (int x = 0; x < m_numBullets; x++)
+	if(!m_gameOver)
 	{
-		if (m_bullets[x].IsLive())
+		m_ufoSpawner.Update();
+		m_astSpawner.Update();
+		m_pupSpawner.Update();
+
+		if (!m_player.Update())
 		{
-			if (!m_bullets[x].Update())
-			{
-				m_bullets[x].SetLive(false);
-			}
-
-			m_bullets[x].LimitCheck(m_displayWidth, m_displayHeight);
+			m_gameOver = true;
 		}
+
+		Core::GetInstance().UpdatePhysics();
 	}
-
-	m_spawner.Update();
-
-	m_player.LimitCheck(m_displayWidth, m_displayHeight);
-	
-	m_spawner.CheckForCollisions(m_bullets, m_numBullets);
 
 	return true;
 }
 
 void Level::Render()
 {
-	al_draw_bitmap(m_background.lock().get(), 0, 0, 0);
+	al_draw_bitmap(m_background.GetBitmap(), 0, 0, NULL);
+
+	if(!m_gameOver)
+	{
+		m_ufoSpawner.Render();
+		m_pupSpawner.Render();
+		m_astSpawner.Render();
+	}
+
 	m_player.Render();
-
-	for (int x = 0; x < m_numBullets; x++)
-	{
-		if (m_bullets[x].IsLive())
-		{
-			m_bullets[x].Render();
-		}
-	}
-
-	m_spawner.Render();
-
-	/*al_draw_textf(m_font.lock().get(), al_map_rgb(255, 255, 255), 20, 20, 0, "X Pos: %f", m_player.GetPos().x);
-	al_draw_textf(m_font.lock().get(), al_map_rgb(255, 255, 255), 20, 50, 0, "Y Pos: %f", m_player.GetPos().y);
-
-	al_draw_textf(m_font.lock().get(), al_map_rgb(255, 255, 255), 20, 80, 0, "X Vel: %f", m_player.GetXVel());
-	al_draw_textf(m_font.lock().get(), al_map_rgb(255, 255, 255), 20, 110, 0, "Y Vel: %f", m_player.GetYVel());
-	al_draw_textf(m_font.lock().get(), al_map_rgb(255, 255, 255), 20, 140, 0, "Direction: %f", m_player.GetDirection());*/
-
-	Vec2 cursorPos = Input::GetMouseAxis();
-
-	al_draw_bitmap(m_cursor.lock().get(), cursorPos.x, cursorPos.y, 0);
 }
 
-void Level::FireBullet()
+void Level::GetInput()
 {
-	for (int x = 0; x < m_numBullets; x++)
+	if (Input::GetInstance().GetKeyDown(ALLEGRO_KEY_P))
 	{
-		if (!m_bullets[x].IsLive())
-		{
-			m_player.GetBulletDets(m_bullets[x]);
-			m_bullets[x].SetLive(true);
-			break;
-		}
+		Core::GetInstance().GetStateManager().AddState(std::make_shared<Pause>());
 	}
-}
 
-bool Level::GetInput()
-{
-	if (Input::GetKeyDown(ALLEGRO_KEY_ESCAPE))
+	if (Input::GetInstance().GetKeyDown(ALLEGRO_KEY_ESCAPE))
 	{
-		return false;
+		Core::GetInstance().GetStateManager().AddState(std::make_shared<Pause>());
+	}
+
+	if (Input::GetInstance().CheckDisplayClose())
+	{
+		Core::GetInstance().GetStateManager().AddState(std::make_shared<Pause>());
 	}
 
 	m_player.Input();
-
-	if (Input::GetKeyDown(ALLEGRO_KEY_P))
-	{
-		m_stateManager->AddState(new Fade(m_stateManager, m_display, WHITE, 500));
-	}
-
-	return true;
 }
-
-
 
 void Level::Shutdown()
 {
-	delete []m_bullets;
-	
+	m_player.Shutdown();
+
+	m_ufoSpawner.Shutdown();
+	m_astSpawner.Shutdown();
+	m_pupSpawner.Shutdown();
+
+	m_BGM.lock()->StopSample();
+
+	Core::GetInstance().ResetPhysicsEngine();
 }
 
-Level::~Level()
-{
-
-}
+Level::~Level() {}

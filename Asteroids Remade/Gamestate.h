@@ -4,8 +4,10 @@
 #include "stdafx.h"
 
 #include "GamestateManager.h"
+#include "ResourceStructs.h"
 
 
+// Base class for gamestates to inherit from
 class Gamestate
 {
 	public:
@@ -18,17 +20,12 @@ class Gamestate
 		virtual void Shutdown() = 0;
 
 	protected:
-		GamestateManager *m_stateManager;
-		ALLEGRO_DISPLAY *m_display;
+		// Default window width and height
+		float m_defWinWidth, m_defWinHeight;
 
-		weak<ALLEGRO_BITMAP> m_background;
-		weak<ALLEGRO_BITMAP> m_cursor;
-
-		/*ALLEGRO_EVENT m_event;
-		ALLEGRO_EVENT_QUEUE *m_eventQueue;*/
+		Bitmap m_background;
 
 	private:
-
 };
 
 #endif

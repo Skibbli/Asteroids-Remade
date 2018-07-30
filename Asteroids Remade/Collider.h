@@ -1,41 +1,54 @@
+#ifndef COLLIDER_H
+#define COLLIDER_H
+
 #include "stdafx.h"
+
+#include "Maths.h"
 
 
 struct Collision
 {
-	Collision(weak<Collider> _colHit, bool _colOcc) { s_collOcc = _colOcc; s_objHit = _colHit; };
+	Collision(Enums::OBJECTS _collTypeHit, int _dmg) { s_collTypeHit = _collTypeHit; s_dmg = _dmg; };
 
-	bool s_collOcc;
-	weak<Collider> s_objHit;
+	int s_dmg;
+	Enums::OBJECTS s_collTypeHit;
 };
 
-
-class Collider : public std::enable_shared_from_this<Collider>
+class Collider
 {
 	public:
 		Collider();
-		Collider(OBJECTS _obj, Vec2 _pos, float _radius);
 		~Collider();
 
-		void SetIsLive(bool _isLive);
 		bool GetIsLive();
-		void SetPos(Vec2 _pos);
-		void CheckCollision(weak<Collider> _col);
-		void AddCollision(weak<Collider> _col);
-		std::vector<Collision> GetCollisions();
-		OBJECTS GetObjType();
+		void SetIsLive(bool _live);
+
+		float GetDamage();
+		void SetDamage(int _dmg);
+		
+		Vec2 GetPos();
+
+		Enums::OBJECTS GetObjectType();
+		Enums::COLTYPE GetColliderType();
+		void SetColliderType(Enums::OBJECTS _type);
+
+		void AddCollision(Enums::OBJECTS _obj, int _dmg);
 		void ResetCollisions();
-		void DrawCollider();
+		std::vector<Collision>& GetCollisions();
 
-	private:
+		virtual void CheckCollision(weak<Collider> _col);
+		virtual void Update();
+		virtual void DrawCollider();		
+
+	protected:
 		bool m_isLive;
-
-		float m_radius;
-
+		int m_dmg;
+		
 		Vec2 m_pos;
-		OBJECTS m_objType;
+		Enums::OBJECTS m_objType;
+		Enums::COLTYPE m_colType;
 
 		std::vector<Collision> m_collDets;
-
-		BaseObj *m_parent;
 };
+
+#endif

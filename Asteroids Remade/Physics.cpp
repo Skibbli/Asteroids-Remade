@@ -1,24 +1,22 @@
 #include "Physics.h"
 
+#include "Collider.h"
 
-Physics::Physics()
-{
 
-}
+Physics::Physics() {}
 
+// Cycles through colliders and checks for collision with other colliders
 void Physics::Update()
 {
-	for (int i = 0; i < m_colliders.size() - 1; i++)
+	for (Uint i = 0; i < m_colliders.size(); i++)
 	{
-		if (m_colliders.at(i).lock().get()->GetIsLive())
+		if (m_colliders.at(i).lock()->GetIsLive())
 		{
-			m_colliders.at(i).lock().get()->ResetCollisions();
-
-			for (int j = i; j < m_colliders.size(); j++)
+			for (Uint j = i + 1; j < m_colliders.size(); j++)
 			{
-				if (m_colliders.at(j).lock().get()->GetIsLive())
+				if (m_colliders.at(j).lock()->GetIsLive())
 				{
-					m_colliders.at(j).lock().get()->CheckCollision(m_colliders.at(j));
+					m_colliders.at(i).lock()->CheckCollision(m_colliders.at(j));
 				}
 			}
 		}
@@ -33,10 +31,17 @@ void Physics::AddCollider(weak<Collider> _col)
 void Physics::DrawColliders()
 {
 	for (weak<Collider> _col : m_colliders)
-		_col.lock().get()->DrawCollider();
+	{
+		if (_col.lock()->GetIsLive())
+			_col.lock()->DrawCollider();
+	}		
 }
 
-Physics::~Physics()
+void Physics::Reset()
 {
-
+	m_colliders.clear();
 }
+
+void Physics::Shutdown() {}
+
+Physics::~Physics() {}

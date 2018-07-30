@@ -1,31 +1,46 @@
-﻿Build started 17/05/2018 17:05:45.
-     1>Project "C:\Users\Silver\Documents\Visual Studio 2013\Projects\Asteroids Remade\Asteroids Remade\Asteroids Remade.vcxproj" on node 2 (Build target(s)).
+﻿Build started 29/07/2018 19:18:58.
+     1>Project "C:\Users\Silver\Documents\Visual Studio 2012\Projects\Asteroids Remade - And Another\Asteroids Remade\Asteroids Remade.vcxproj" on node 2 (Build target(s)).
+       Project file contains ToolsVersion="12.0". This toolset may be unknown or missing, in which case you may be able to resolve this by installing the appropriate version of MSBuild, or the build may have been forced to a particular ToolsVersion for policy reasons. Treating the project as if it had ToolsVersion="4.0". For more information, please see http://go.microsoft.com/fwlink/?LinkId=291333.
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"C:\Users\Silver\Documents\Visual Studio 2013\Projects\Asteroids Remade\Dependencies\Allegro 5\include" /I"C:\Users\Silver\Documents\Visual Studio 2013\Projects\Asteroids Remade\Dependencies\glm" /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Asteroid.cpp Bullet.cpp
-         Bullet.cpp
-         Asteroid.cpp
-         Generating Code...
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /I"C:\Users\Silver\Documents\Visual Studio 2012\Projects\Asteroids Remade - And Another\Dependencies\Allegro 5\include" /I"C:\Users\Silver\Documents\Visual Studio 2012\Projects\Asteroids Remade - And Another\Dependencies\glm" /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt GamestateManager.cpp
+         GamestateManager.cpp
        Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Silver\Documents\Visual Studio 2013\Projects\Asteroids Remade\Debug\Asteroids Remade.exe" /INCREMENTAL /NOLOGO /LIBPATH:"C:\Users\Silver\Documents\Visual Studio 2013\Projects\Asteroids Remade\Dependencies\Allegro 5\lib" "allegro-5.0.10-monolith-md.lib" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Silver\Documents\Visual Studio 2013\Projects\Asteroids Remade\Debug\Asteroids Remade.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Silver\Documents\Visual Studio 2013\Projects\Asteroids Remade\Debug\Asteroids Remade.lib" /MACHINE:X86 Debug\Asteroid.obj
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Silver\Documents\Visual Studio 2012\Projects\Asteroids Remade - And Another\Debug\Asteroids Remade.exe" /INCREMENTAL /NOLOGO /LIBPATH:"C:\Users\Silver\Documents\Visual Studio 2012\Projects\Asteroids Remade - And Another\Dependencies\Allegro 5\lib" "allegro-5.0.10-monolith-md.lib" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Silver\Documents\Visual Studio 2012\Projects\Asteroids Remade - And Another\Debug\Asteroids Remade.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Silver\Documents\Visual Studio 2012\Projects\Asteroids Remade - And Another\Debug\Asteroids Remade.lib" /MACHINE:X86 Debug\Asteroid.obj
          Debug\AsteroidSpawner.obj
-         Debug\BaseObj.obj
+         Debug\BaseObject.obj
          Debug\Bullet.obj
          Debug\Button.obj
+         Debug\CircleCollider.obj
          Debug\Collider.obj
+         Debug\Core.obj
+         Debug\Explosion.obj
          Debug\Fade.obj
+         Debug\GameOver.obj
          Debug\Gamestate.obj
          Debug\GamestateManager.obj
+         Debug\HiScore.obj
          Debug\Input.obj
          Debug\Level.obj
          Debug\Main.obj
+         Debug\Maths.obj
+         Debug\Options.obj
+         Debug\Pause.obj
+         Debug\Physics.obj
          Debug\Player.obj
+         Debug\Powerup.obj
+         Debug\PowerupSpawner.obj
+         Debug\RectangleCollider.obj
          Debug\Resources.obj
+         Debug\Slider.obj
          Debug\Time.obj
          Debug\Title.obj
          Debug\Transform.obj
-         Asteroids Remade.vcxproj -> C:\Users\Silver\Documents\Visual Studio 2013\Projects\Asteroids Remade\Debug\Asteroids Remade.exe
-     1>Done Building Project "C:\Users\Silver\Documents\Visual Studio 2013\Projects\Asteroids Remade\Asteroids Remade\Asteroids Remade.vcxproj" (Build target(s)).
+         Debug\UFO.obj
+         Debug\UFOSpawner.obj
+         Debug\Weapon.obj
+         Asteroids Remade.vcxproj -> C:\Users\Silver\Documents\Visual Studio 2012\Projects\Asteroids Remade - And Another\Debug\Asteroids Remade.exe
+     1>Done Building Project "C:\Users\Silver\Documents\Visual Studio 2012\Projects\Asteroids Remade - And Another\Asteroids Remade\Asteroids Remade.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:05.41
+Time Elapsed 00:00:04.06
